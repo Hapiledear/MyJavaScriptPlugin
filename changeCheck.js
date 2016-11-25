@@ -48,13 +48,25 @@
 		return utcDate;
 	}
 	
+	function isDateFormat(str){
+		var reg = /\sGMT/g;
+		return reg.test(str);
+	}
+	
 	function bindKeyUpEvent(){
 		for(var i in propArray){
 			var $obj = $("[name='"+propArray[i]+"']");
 			$obj.attr("_index",i);
+			if(isDateFormat(valueArray[i])){
+				$obj.attr("format","date");
+			}
 			
 			$obj.keyup(function(){
+				var format = $obj.attr("format");
 				var newValue = $obj.val();
+				if(format == "date"){
+					newValue = new Date(newValue).toString();
+				}
 				var index = $obj.attr("_index");
 				if(newValue == valueArray[index]){
 					$obj.css({"border-color":settings.primaryColor});
