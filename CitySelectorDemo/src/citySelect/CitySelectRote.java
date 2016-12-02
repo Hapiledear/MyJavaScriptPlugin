@@ -42,10 +42,16 @@ public class CitySelectRote extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		PrintWriter out = response.getWriter();  
 		out.flush();
+		int pageNum =Integer.parseInt(request.getParameter("pageNum"));
+		
+		System.out.println(pageNum+"");
+		
 		String keyWord = request.getParameter("keyWord");
 		System.out.println(keyWord);
 		String[] words = keyWord.split(" ");
 		List<CdeBnkLink> resultList = new ArrayList<>();
+	
+		
 		String bankNameSearch = "";
 		String sql = "select lbnk_no,lbnk_nm from BAP.T_BAP_CDE_BNK_LINK t where cde_flg = '1' ";
 		for(String str : words){
@@ -60,7 +66,7 @@ public class CitySelectRote extends HttpServlet {
 			if(type == 1){
 				sql =sql + " and lbnk_prov = '"+code+"' ";
 				System.out.println(sql);
-				resultList = service.find(code);
+				resultList = service.find(sql);
 			//	resultList = service.findByProv(code);
 			}
 			
@@ -70,6 +76,13 @@ public class CitySelectRote extends HttpServlet {
 				System.out.println(sql);
 				resultList = service.find(sql);
 			}
+		}
+		
+		CdeBnkLink test = new CdeBnkLink();
+		test.setLbnkNm("test");
+		test.setLbnkNo("test");
+		if(pageNum>1){
+			resultList.add(test);
 		}
 		
 		String jsonStr = JSON.toJSONString(resultList);
